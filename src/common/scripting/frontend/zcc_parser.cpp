@@ -455,7 +455,7 @@ PNamespace *ParseOneScript(const int baselump, ZCCParseState &state)
 				{
 					resolvedPath += "/" + relativePath; // add relative path
 
-					lumpnum = Wads.CheckNumForFullName(resolvedPath, true); // check for relative include
+					lumpnum = fileSystem.CheckNumForFullName(resolvedPath, true); // check for relative include
 				}
 			}
 

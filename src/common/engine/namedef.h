@@ -598,6 +598,13 @@ xx(scalex_bottom)
 xx(scaley_bottom)
 xx(light)
 xx(lightabsolute)
+xx(light_top)
+xx(lightabsolute_top)
+xx(light_mid)
+xx(lightabsolute_mid)
+xx(light_bottom)
+xx(lightabsolute_bottom)
+
 xx(lightfog)
 xx(nofakecontrast)
 xx(smoothlighting)
@@ -1107,4 +1114,3 @@ xy(menu_change, "menu/change")
 xy(menu_advance, "menu/advance")
 
 xx(zoomsize)
-

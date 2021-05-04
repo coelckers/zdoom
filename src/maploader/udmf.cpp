@@ -761,7 +761,7 @@ public:
 					ReadUserKey(ukey);
 					loader->MapThingsUserData.Push(ukey);
 				}
-				else
+				else if (stricmp("comment", key.GetChars()))
 				{
 					DPrintf(DMSG_WARNING, "Unknown UDMF thing key %s\n", key.GetChars());
 				}
@@ -944,6 +944,8 @@ public:
 				continue;
 
 			default:
+				if (!stricmp("comment", key.GetChars()))
+					continue;
 				break;
 			}
 
@@ -1115,7 +1117,8 @@ public:
 				break;
 
 			default:
-				DPrintf(DMSG_WARNING, "Unknown UDMF linedef key %s\n", key.GetChars());
+				if (strnicmp("user_", key.GetChars(), 5))
+					DPrintf(DMSG_WARNING, "Unknown UDMF linedef key %s\n", key.GetChars());
 				break;
 			}
 
@@ -1229,6 +1232,8 @@ public:
 				continue;
 
 			default:
+				if (!stricmp("comment", key.GetChars()))
+					continue;
 				break;
 			}
 
@@ -1454,7 +1459,8 @@ public:
 				break;
 
 			default:
-				DPrintf(DMSG_WARNING, "Unknown UDMF sidedef key %s\n", key.GetChars());
+				if (strnicmp("user_", key.GetChars(), 5))
+					DPrintf(DMSG_WARNING, "Unknown UDMF sidedef key %s\n", key.GetChars());
 				break;
 
 			}
@@ -1571,6 +1577,8 @@ public:
 				continue;
 
 			default:
+				if (!stricmp("comment", key.GetChars()))
+					continue;
 				break;
 			}
 
@@ -1959,7 +1967,8 @@ public:
 					break;
 					
 				default:
-					DPrintf(DMSG_WARNING, "Unknown UDMF sector key %s\n", key.GetChars());
+					if (strnicmp("user_", key.GetChars(), 5))
+						DPrintf(DMSG_WARNING, "Unknown UDMF sector key %s\n", key.GetChars());
 					break;
 			}
 			if ((namespace_bits & (Zd | Zdt)) && !strnicmp("user_", key.GetChars(), 5))

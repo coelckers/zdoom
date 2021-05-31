@@ -554,6 +554,12 @@ add_custom_command( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sc_man_scanner.h
 	COMMAND re2c --no-generation-date -s -o ${CMAKE_CURRENT_BINARY_DIR}/sc_man_scanner.h ${CMAKE_CURRENT_SOURCE_DIR}/common/engine/sc_man_scanner.re
 	DEPENDS re2c ${CMAKE_CURRENT_SOURCE_DIR}/common/engine/sc_man_scanner.re )
 
+if (NOT APPLE AND NOT WIN32)
+	add_custom_command( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sdlicon.h
+	COMMAND xpmtosdl ${CMAKE_CURRENT_SOURCE_DIR}/posix/zdoom.xpm ${CMAKE_CURRENT_BINARY_DIR}/sdlicon.h
+	DEPENDS xpmtosdl ${CMAKE_CURRENT_SOURCE_DIR}/posix/zdoom.xpm )
+endif()
+
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 option( SEND_ANON_STATS "Enable sending of anonymous hardware statistics" ON )
@@ -716,6 +722,10 @@ set( NOT_COMPILED_SOURCE_FILES
 	zcc-parse.h
 	common/platform/win32/zutil.natvis
 )
+
+if( NOT WIN32 AND NOT APPLE )
+    set( NOT_COMPILED_SOURCE_FILES ${NOT_COMPILED_SOURCE_FILES} sdlicon.h)
+endif()
 
 set( VM_JIT_SOURCES
 	common/scripting/jit/jit.cpp

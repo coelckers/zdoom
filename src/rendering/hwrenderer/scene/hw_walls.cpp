@@ -1913,7 +1913,23 @@ void HWWall::DoFFloorBlocks(HWDrawInfo *di, seg_t * seg, sector_t * frontsector,
 			InverseFloors(di, seg, frontsector, topleft, topright, bottomleft, bottomright);
 	}
 }
-	
+
+inline int CalcRelLight(int lightlevel, int orglightlevel, int rel)
+{
+	if (orglightlevel >= 253)			// with the software renderer fake contrast won't be visible above this.
+	{
+		return 0;
+	}
+	else if (lightlevel - rel > 256)	// the brighter part of fake contrast will be clamped so also clamp the darker part by the same amount for better looks
+	{
+		return 256 - lightlevel + rel;
+	}
+	else
+	{
+		return rel;
+	}
+}
+
 //==========================================================================
 //
 // 
@@ -2018,19 +2034,6 @@ void HWWall::Process(HWDrawInfo *di, seg_t *seg, sector_t * frontsector, sector_
 	int rel = 0;
 	int orglightlevel = hw_ClampLight(frontsector->lightlevel);
 	bool foggy = (!Colormap.FadeColor.isBlack() || di->Level->flags&LEVEL_HASFADETABLE);	// fog disables fake contrast
-	lightlevel = hw_ClampLight(seg->sidedef->GetLightLevel(foggy, orglightlevel, false, &rel));
-	if (orglightlevel >= 253)			// with the software renderer fake contrast won't be visible above this.
-	{
-		rellight = 0;
-	}
-	else if (lightlevel - rel > 256)	// the brighter part of fake contrast will be clamped so also clamp the darker part by the same amount for better looks
-	{
-		rellight = 256 - lightlevel + rel;
-	}
-	else
-	{
-		rellight = rel;
-	}
 
 	alpha = 1.0f;
 	RenderStyle = STYLE_Normal;
@@ -2076,6 +2079,8 @@ void HWWall::Process(HWDrawInfo *di, seg_t *seg, sector_t * frontsector, sector_
 		else
 		{
 			// normal texture
+			lightlevel = hw_ClampLight(seg->sidedef->GetLightLevel(foggy, orglightlevel, side_t::mid, false, &rel));
+			rellight = CalcRelLight(lightlevel, orglightlevel, rel);
 			texture = TexMan.GetGameTexture(seg->sidedef->GetTexture(side_t::mid), true);
 			if (texture && texture->isValid())
 			{
@@ -2144,6 +2149,8 @@ void HWWall::Process(HWDrawInfo *di, seg_t *seg, sector_t * frontsector, sector_
 
 			if (bch1a < fch1 || bch2a < fch2)
 			{
+				lightlevel = hw_ClampLight(seg->sidedef->GetLightLevel(foggy, orglightlevel, side_t::top, false, &rel));
+				rellight = CalcRelLight(lightlevel, orglightlevel, rel);
 				texture = TexMan.GetGameTexture(seg->sidedef->GetTexture(side_t::top), true);
 				if (texture && texture->isValid())
 				{
@@ -2194,6 +2201,8 @@ void HWWall::Process(HWDrawInfo *di, seg_t *seg, sector_t * frontsector, sector_
 			texture = tex;
 		}
 		else texture = nullptr;
+		lightlevel = hw_ClampLight(seg->sidedef->GetLightLevel(foggy, orglightlevel, side_t::mid, false, &rel));
+		rellight = CalcRelLight(lightlevel, orglightlevel, rel);
 
 		if (isportal)
 		{
@@ -2212,6 +2221,9 @@ void HWWall::Process(HWDrawInfo *di, seg_t *seg, sector_t * frontsector, sector_
 		}
 		else
 		{
+
+			lightlevel = hw_ClampLight(seg->sidedef->GetLightLevel(foggy, orglightlevel, side_t::top, false, &rel));
+			rellight = CalcRelLight(lightlevel, orglightlevel, rel);
 			if (texture || drawfogboundary)
 			{
 				DoMidTexture(di, seg, drawfogboundary, frontsector, backsector, realfront, realback,
@@ -2234,6 +2246,8 @@ void HWWall::Process(HWDrawInfo *di, seg_t *seg, sector_t * frontsector, sector_
 
 		if (bfh1 > ffh1 || bfh2 > ffh2)
 		{
+			lightlevel = hw_ClampLight(seg->sidedef->GetLightLevel(foggy, orglightlevel, side_t::bottom, false, &rel));
+			rellight = CalcRelLight(lightlevel, orglightlevel, rel);
 			texture = TexMan.GetGameTexture(seg->sidedef->GetTexture(side_t::bottom), true);
 			if (texture && texture->isValid())
 			{

@@ -46,6 +46,7 @@
 static uint64_t FirstFrameStartTime;
 static uint64_t CurrentFrameStartTime;
 static uint64_t FreezeTime;
+static double lastCheck;
 int GameTicRate = 35;	// make sure it is not 0, even if the client doesn't set it.
 
 double TimeScale = 1.0;
@@ -201,3 +202,17 @@ void I_FreezeTime(bool frozen)
 	}
 }
 
+double I_GetInputScale(bool const noscale)
+{
+	if (!noscale)
+	{
+		double now = I_msTimeF();
+		double elapsedInputTicks = lastCheck > 0 ? std::min(now - lastCheck, 1000.0 / GameTicRate) : 1;
+		lastCheck = now;
+		return elapsedInputTicks * GameTicRate / 1000.0;
+	}
+	else
+	{
+		return 1;
+	}
+}

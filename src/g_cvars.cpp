@@ -50,6 +50,7 @@ CVAR(Bool, var_pushers, true, CVAR_SERVERINFO);
 CVAR(Bool, gl_cachenodes, true, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 CVAR(Float, gl_cachetime, 0.6f, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 CVAR(Bool, alwaysapplydmflags, false, CVAR_SERVERINFO);
+CVAR(Bool, cl_forceangleinterp, false, CVAR_ARCHIVE|CVAR_GLOBALCONFIG)
 
 // [RH] Feature control cvars
 CVAR(Bool, var_friction, true, CVAR_SERVERINFO);

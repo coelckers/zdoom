@@ -38,3 +38,6 @@ uint64_t I_msTimeFS();
 
 // Nanosecond-accurate time
 uint64_t I_nsTime();
+
+// Return scale value for applying ticrate-set input changes at framerate.
+double I_GetInputScale(bool const noscale = false);
